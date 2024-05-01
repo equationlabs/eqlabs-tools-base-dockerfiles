@@ -7,6 +7,7 @@ help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 #------ Working Targets ----------#
+build-all: build-php-mysql build-php-pgsql build-skaffold-slim
 build-php-mysql:	## [Docker] Build and Push php image with roadrunner and mysql extension
 	@$(MAKE) build-and-push type=php variant=roadrunner.mysql dir=${PHP_DIR}
 build-php-pgsql:	## [Docker] Build and Push php image with roadrunner and pgsql extension
@@ -16,10 +17,10 @@ build-skaffold-slim:	## [Docker] Build and Push skaffold image with slim variant
 build-and-push:
 	@$(call validate_type)
 	@$(call validate_variant)
-	@docker build -t ${DOCKER_REGISTRY}/$(type)-$(variant):latest -f $(dir)/Dockerfile.$(variant) .
-	@echo "🎉 $(type) image built successfully  with tag ${DOCKER_REGISTRY}/$(type)-$(variant):latest"
-	@docker push ${DOCKER_REGISTRY}/$(type)-$(variant):latest
-	@echo "🎉 $(type) image pushed successfully with tag ${DOCKER_REGISTRY}/$(type)-$(variant):latest"
+	@docker build -t ${DOCKER_REGISTRY}/$(type).$(variant):latest -f $(dir)/Dockerfile.$(variant) .
+	@echo "🎉 $(type) image built successfully  with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
+	@docker push ${DOCKER_REGISTRY}/$(type).$(variant):latest
+	@echo "🎉 $(type) image pushed successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
 
 
 #------ Helper Targets ----------#
