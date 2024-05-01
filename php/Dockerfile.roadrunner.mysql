@@ -7,3 +7,6 @@ COPY --from=composer/composer:2.7.4-bin /composer /usr/bin/composer
 COPY --from=ghcr.io/roadrunner-server/roadrunner:2024.1 /usr/bin/rr /usr/bin/rr
 
 RUN install-php-extensions pdo_mysql zip sockets opcache apcu redis http bcmath
+
+# for roadrunner we need to enable opcache for cli
+RUN echo "[opcache] \nopcache.enable_cli=1 \nopcache.preload=/opt/config/preload.php \nopcache.preload_user=root" | tee "$PHP_INI_DIR/conf.d/opcache-cli.ini"
