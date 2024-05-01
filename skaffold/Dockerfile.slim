@@ -1,4 +1,21 @@
-FROM chainguard/skaffold:latest as skaffold
+FROM alpine:3.16
+# Install dependencies
+RUN apk add --no-cache ca-certificates curl git make bash && rm -rf /var/lib/apk/cache
+# Set working directory
+WORKDIR /usr/local/bin
 
-# Then we need to overwrite the entrypoint of the slim image to be able to use the skaffold binary
-ENTRYPOINT ["/usr/bin/skaffold"]
+# Install Skaffold
+RUN curl -Lo skaffold "https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64"
+## Install Kustomize
+RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+# Install Kubectl
+RUN curl -Lo kubectl "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+# Make applications executables
+RUN chmod +x skaffold kustomize kubectl
+
+# some tweaks for the tools
+RUN skaffold config set --global collect-metrics false
+
+# Final image entrypoint
+CMD ["bash"]
