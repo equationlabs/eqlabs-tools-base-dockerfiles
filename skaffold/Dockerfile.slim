@@ -1,0 +1,4 @@
+FROM chainguard/skaffold:latest as skaffold
+
+# Then we need to overwrite the entrypoint of the slim image to be able to use the skaffold binary
+ENTRYPOINT ["/usr/bin/skaffold"]
