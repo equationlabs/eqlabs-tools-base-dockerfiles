@@ -1,11 +1,12 @@
 FROM php:8.2-cli as php_base
+ENV  COMPOSER_ALLOW_SUPERUSER 1
 
-RUN apt-get update && apt-get install -y postgresql-client
-
+# Install roadrunner and composer and php-extension-installer
 COPY --from=mlocati/php-extension-installer:2.1.81 /usr/bin/install-php-extensions /usr/local/bin/
 COPY --from=composer/composer:2.7.4-bin /composer /usr/bin/composer
 COPY --from=ghcr.io/roadrunner-server/roadrunner:2024.1 /usr/bin/rr /usr/bin/rr
 
+# Install php extensions
 RUN install-php-extensions pdo_mysql zip sockets opcache apcu redis http bcmath
 
 # for roadrunner we need to enable opcache for cli
