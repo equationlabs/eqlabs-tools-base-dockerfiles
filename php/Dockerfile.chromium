@@ -1,0 +1,12 @@
+#-----------------------------------------------------------------#
+#----- Main Target to use in upper stages for E2E tests ---------#
+#-----------------------------------------------------------------#
+FROM php:8.2-cli-alpine as runner
+# 3rd party tools
+COPY --from=composer/composer:2.7.1-bin /composer /usr/bin/composer
+COPY --from=mlocati/php-extension-installer:2.2.2 /usr/bin/install-php-extensions /usr/local/bin/
+
+# Install Chromium and ChromeDriver for Web Tests
+RUN apk add --no-cache nss nss-tools chromium chromium-chromedriver
+# Install PHP extensions
+RUN install-php-extensions pdo_mysql zip opcache apcu redis http sockets soap

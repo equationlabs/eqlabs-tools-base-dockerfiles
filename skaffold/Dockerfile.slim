@@ -1,6 +1,6 @@
 FROM alpine:3.16
 # Install dependencies
-RUN apk add --no-cache ca-certificates curl git make bash && rm -rf /var/lib/apk/cache
+RUN apk add --no-cache ca-certificates curl git make bash docker && rm -rf /var/lib/apk/cache
 # Set working directory
 WORKDIR /usr/local/bin
 

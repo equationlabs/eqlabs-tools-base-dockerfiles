@@ -7,7 +7,9 @@ help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 #------ Working Targets ----------#
-build-all: build-php-mysql build-php-pgsql build-skaffold-slim
+build-all: build-php-mysql build-php-pgsql build-skaffold-slim build-php-chromium
+build-php-chromium:	## [Docker] Build and Push php image with ext and chromium extension for testing
+	@$(MAKE) build-and-push type=php variant=chromium dir=${PHP_DIR}
 build-php-mysql:	## [Docker] Build and Push php image with roadrunner and mysql extension
 	@$(MAKE) build-and-push type=php variant=roadrunner.mysql dir=${PHP_DIR}
 build-php-pgsql:	## [Docker] Build and Push php image with roadrunner and pgsql extension
