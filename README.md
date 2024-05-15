@@ -9,6 +9,9 @@ We provide a Makefile with some targets to build and push the images to a Docker
 $ make build-php-roadrunner-mysql
 $ make push-php-roadrunner-mysql
 $ make build-skaffold-slim
+$ make build-php-chromium
+
+$ make buld-all
 ```
 
 ### **Available types:**
@@ -17,6 +20,7 @@ $ make build-skaffold-slim
 
 ### **Available variants:**
 - **PHP**
+  - php.chromium
   - roadrunner.mysql
   - roadrunner.pgsql
 - **Skaffold**
@@ -25,6 +29,7 @@ $ make build-skaffold-slim
 
 ## Available Images
 - PHP
+  - [PHP 8.2 + Chromium extension](php/Dockerfile.chromium) - Useful for E2E Testing
   - [PHP 8.2 + RoadRunner + MySQL extension](php/Dockerfile.roadrunner.mysql)
   - [PHP 8.2 + RoadRunner + PostgreSQL extension](php/Dockerfile.roadrunner.pgsql)
 - Skaffold
