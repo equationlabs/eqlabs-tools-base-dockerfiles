@@ -1,4 +1,4 @@
-FROM php:8.2-cli as php_base
+FROM php:8.2-cli AS php_base
 ENV  COMPOSER_ALLOW_SUPERUSER 1
 
 # Install postgresql-client

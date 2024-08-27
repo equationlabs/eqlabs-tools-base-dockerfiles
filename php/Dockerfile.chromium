@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------#
 #----- Main Target to use in upper stages for E2E tests ---------#
 #-----------------------------------------------------------------#
-FROM php:8.2-cli-alpine as runner
+FROM php:8.2-cli-alpine AS runner
 # 3rd party tools
 COPY --from=composer/composer:2.7.1-bin /composer /usr/bin/composer
 COPY --from=mlocati/php-extension-installer:2.2.2 /usr/bin/install-php-extensions /usr/local/bin/

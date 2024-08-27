@@ -19,8 +19,8 @@ build-skaffold-slim:	## [Docker] Build and Push skaffold image with slim variant
 build-and-push:
 	@$(call validate_type)
 	@$(call validate_variant)
-	@docker build -t ${DOCKER_REGISTRY}/$(type).$(variant):latest -f $(dir)/Dockerfile.$(variant) .
-	@echo "🎉 $(type) image built successfully  with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
+	@docker build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTRY}/$(type).$(variant):latest -f $(dir)/Dockerfile.$(variant) .
+	@echo "🎉 $(type) image built successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
 	@docker push ${DOCKER_REGISTRY}/$(type).$(variant):latest
 	@echo "🎉 $(type) image pushed successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
 
