@@ -19,6 +19,8 @@ $ make buld-all
 - skaffold
 
 ### **Available variants:**
+> All these images are pushed to https://hub.docker.com/r/rcastellanosm registry on Docker Hub
+
 - **PHP**
   - php.chromium
   - roadrunner.mysql
@@ -29,8 +31,8 @@ $ make buld-all
 
 ## Available Images
 - PHP
-  - [PHP 8.2 + Chromium extension](php/Dockerfile.chromium) - Useful for E2E Testing
-  - [PHP 8.2 + RoadRunner + MySQL extension](php/Dockerfile.roadrunner.mysql)
-  - [PHP 8.2 + RoadRunner + PostgreSQL extension](php/Dockerfile.roadrunner.pgsql)
+  - [PHP 8.2/8.4 + Chromium extension](php/Dockerfile.chromium) - Useful for E2E Testing
+  - [PHP 8.2/8.4 + RoadRunner + MySQL extension](php/Dockerfile.roadrunner.mysql)
+  - [PHP 8.2/8.4 + RoadRunner + PostgreSQL extension](php/Dockerfile.roadrunner.pgsql)
 - Skaffold
   - [Skaffold + Kubectl + Kustomize for CI/CD Pipelines](skaffold/Dockerfile.slim)
