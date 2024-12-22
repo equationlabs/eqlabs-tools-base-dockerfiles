@@ -9,7 +9,9 @@ help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 #------ Working Targets ----------#
-build-all: build-php-mysql build-php-pgsql build-skaffold-slim build-php-chromium
+build-all: build-php-mysql build-php-pgsql build-skaffold-slim build-php-chromium build-php-tester
+build-php-tester:	## [Docker] Build and Push php image with ext for testing
+	@$(MAKE) build-and-push-php variant=tester dir=${PHP_DIR}
 build-php-chromium:	## [Docker] Build and Push php image with ext and chromium extension for testing
 	@$(MAKE) build-and-push-php variant=chromium dir=${PHP_DIR}
 build-php-mysql:	## [Docker] Build and Push php image with roadrunner and mysql extension
@@ -21,7 +23,7 @@ build-skaffold-slim:	## [Docker] Build and Push skaffold image with slim variant
 build-and-push-php:
 	@$(call validate_variant)
 	@for tag in $(TAGS); do \
-		docker build --platform linux/amd64,linux/arm64 --build-arg PHP_VERSION=$$tag -t ${DOCKER_REGISTRY}/php.$(variant):$$tag -f $(dir)/Dockerfile.$(variant) .; \
+		docker build --build-arg PHP_VERSION=$$tag -t ${DOCKER_REGISTRY}/php.$(variant):$$tag -f $(dir)/Dockerfile.$(variant) .; \
 		echo "🎉 PHP image built successfully with tag ${DOCKER_REGISTRY}/php.$(variant):$$tag"; \
 	done
 	@docker push --all-tags ${DOCKER_REGISTRY}/php.$(variant)
@@ -29,7 +31,7 @@ build-and-push-php:
 build-and-push:
 	@$(call validate_type)
 	@$(call validate_variant)
-	@docker build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTRY}/$(type).$(variant):latest -f $(dir)/Dockerfile.$(variant) .
+	@docker build -t ${DOCKER_REGISTRY}/$(type).$(variant):latest -f $(dir)/Dockerfile.$(variant) .
 	@echo "🎉 $(type) image built successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
 	@docker push ${DOCKER_REGISTRY}/$(type).$(variant):latest
 	@echo "🎉 $(type) image pushed successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
