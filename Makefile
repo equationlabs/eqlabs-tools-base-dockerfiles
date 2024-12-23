@@ -23,7 +23,7 @@ build-skaffold-slim:	## [Docker] Build and Push skaffold image with slim variant
 build-and-push-php:
 	@$(call validate_variant)
 	@for tag in $(TAGS); do \
-		docker build --build-arg PHP_VERSION=$$tag -t ${DOCKER_REGISTRY}/php.$(variant):$$tag -f $(dir)/Dockerfile.$(variant) .; \
+		docker build --platform=linux/amd64,linux/arm64 --build-arg PHP_VERSION=$$tag -t ${DOCKER_REGISTRY}/php.$(variant):$$tag -f $(dir)/Dockerfile.$(variant) .; \
 		echo "🎉 PHP image built successfully with tag ${DOCKER_REGISTRY}/php.$(variant):$$tag"; \
 	done
 	@docker push --all-tags ${DOCKER_REGISTRY}/php.$(variant)
@@ -35,7 +35,6 @@ build-and-push:
 	@echo "🎉 $(type) image built successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
 	@docker push ${DOCKER_REGISTRY}/$(type).$(variant):latest
 	@echo "🎉 $(type) image pushed successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
-
 
 #------ Helper Targets ----------#
 define validate_type
