@@ -25,9 +25,9 @@ build-and-push-php:
 	@for tag in $(TAGS); do \
 		docker build --platform=linux/amd64,linux/arm64 --build-arg PHP_VERSION=$$tag -t ${DOCKER_REGISTRY}/php.$(variant):$$tag -f $(dir)/Dockerfile.$(variant) .; \
 		echo "🎉 PHP image built successfully with tag ${DOCKER_REGISTRY}/php.$(variant):$$tag"; \
+		docker push ${DOCKER_REGISTRY}/php.$(variant):$$tag; \
 	done
-	@docker push --all-tags ${DOCKER_REGISTRY}/php.$(variant)
-	@echo "🎉 PHP images pushed successfully!"
+	@echo "🎉 PHP images built and pushed successfully!"
 build-and-push:
 	@$(call validate_type)
 	@$(call validate_variant)
