@@ -23,8 +23,8 @@ $ make buld-all
 
 - **PHP**
   - php.chromium
-  - roadrunner.mysql
-  - roadrunner.pgsql
+  - php.roadrunner.mysql
+  - php.roadrunner.pgsql
 - **Skaffold**
   - skaffold.slim
   - skaffold.full
