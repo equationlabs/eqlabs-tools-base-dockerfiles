@@ -1,6 +1,6 @@
 ARG PHP_VERSION=${version:-8.2}
 
-FROM --platform=${TARGETPLATFORM} php:${PHP_VERSION}-cli-alpine AS php_base
+FROM php:${PHP_VERSION}-cli-alpine AS php_base
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
