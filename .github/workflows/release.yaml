@@ -50,7 +50,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ matrix.images.image }}
+                  images: ${{ matrix.variants.image }}
 
             #- name: Build and push
     #          uses: docker/build-push-action@v6
