@@ -21,17 +21,11 @@ jobs:
                     - linux/amd64
                     - linux/arm64
                 variants:
-                    - image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.mysql
-                      dockerfile: ./php/Dockerfile.roadrunner.mysql
+                    - dockerfile: ./php/Dockerfile.roadrunner.mysql
+                      image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.mysql
         #                    - image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.pgsql
         #                      dockerfile: ./php/Dockerfile.roadrunner.pgsql
         steps:
-            - name: Checkout Source Code
-              id: checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
             - name: Prepare
               run: |
                   platform=${{ matrix.platform }}
@@ -47,6 +41,12 @@ jobs:
                         "containerd-snapshotter": true
                       }
                     }
+
+            - name: Checkout Source Code
+              id: checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
             - name: Login to Docker Hub
               id: login
