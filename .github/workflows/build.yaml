@@ -84,19 +84,19 @@ jobs:
                   push: ${{ github.event_name != 'pull_request' }}
             #                  outputs: type=image,push-by-digest=true,name-canonical=true,push=true
 
-            - name: Export digests
-              run: |
-                 mkdir -p ${{ runner.temp }}/digests
-                 digest="${{ steps.build.outputs.digest }}"
-                 touch "${{ runner.temp }}/digests/${digest#sha256:}"
-
-            - name: Upload digest
-              uses: actions/upload-artifact@v4
-              with:
-                  name: digests-${{ matrix.variants.image }}-${{ env.PLATFORM_PAIR }}
-                  path: ${{ runner.temp }}/digests/*
-                  if-no-files-found: error
-                  retention-days: 1
+#            - name: Export digests
+#              run: |
+#                 mkdir -p ${{ runner.temp }}/digests
+#                 digest="${{ steps.build.outputs.digest }}"
+#                 touch "${{ runner.temp }}/digests/${digest#sha256:}"
+#
+#            - name: Upload digest
+#              uses: actions/upload-artifact@v4
+#              with:
+#                  name: digests-${{ matrix.variants.image }}-${{ env.PLATFORM_PAIR }}
+#                  path: ${{ runner.temp }}/digests/*
+#                  if-no-files-found: error
+#                  retention-days: 1
 
 
 #    merge:
