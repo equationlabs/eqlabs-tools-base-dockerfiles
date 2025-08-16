@@ -21,7 +21,7 @@ jobs:
             matrix:
                 variants:
                     - dockerfile: ./php/Dockerfile.roadrunner.mysql
-                      image: ghcr.io/equationlabs/base-docker-images/php.roadrunner.mysql
+                      image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.mysql
 
         steps:
             - name: Checkout Source Code
@@ -60,7 +60,7 @@ jobs:
               id: build-and-push
               uses: docker/build-push-action@v6
               with:
-                  cache-from: type=gha
+                  cache-from: type=gha,mode=max
                   cache-to: type=gha,mode=max
                   file: ${{ matrix.variants.dockerfile }}
                   build-args: 'PHP_VERSION=8.4'
