@@ -52,13 +52,13 @@ jobs:
               with:
                   images: ${{ matrix.variants.image }}
 
-            #- name: Build and push
-    #          uses: docker/build-push-action@v6
-    #          with:
-    #                  platforms: {{ env.AVAILABLE_PLATFORMS }}
-    #                  file: ${{ matrix.images.dockerfile }}
-    #                  push: ${{ github.event_name != 'pull_request' }}
-    #                  build-args: 'PHP_VERSION=8.4'
-    #                  tags: ${{ steps.extract-metadata.outputs.tags }}
-    #                  labels: ${{ steps.extract-metadata.outputs.labels }}
+            - name: Build and push
+              uses: docker/build-push-action@v6
+              with:
+                  platforms: ${{ env.AVAILABLE_PLATFORMS }}
+                  file: ${{ matrix.variants.dockerfile }}
+                  push: ${{ github.event_name != 'pull_request' }}
+                  build-args: 'PHP_VERSION=8.4'
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
 
