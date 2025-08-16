@@ -60,14 +60,15 @@ jobs:
               id: build-and-push
               uses: docker/build-push-action@v6
               with:
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
                   file: ${{ matrix.variants.dockerfile }}
                   build-args: 'PHP_VERSION=8.4'
                   platforms: ${{ env.AVAILABLE_PLATFORMS }}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   push: ${{ github.event_name != 'pull_request' }}
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
+
 
             # Sign the resulting Docker image digest except on PRs.
             # This will only write to the public Rekor transparency log when the Docker repository is public to avoid leaking data.
