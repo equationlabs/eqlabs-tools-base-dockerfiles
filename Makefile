@@ -1,19 +1,22 @@
-SHELL 			:= /bin/bash
-PHP_DIR			:= ${PWD}/php
-SKAFFOLD_DIR 	:= ${PWD}/skaffold
-DOCKER_REGISTRY	:= rcastellanosm
-TAGS			:= 8.2 8.4
+SHELL 				:= /bin/bash
+PHP_DIR				:= ${PWD}/php
+SKAFFOLD_DIR 		:= ${PWD}/skaffold
+DOCKER_REGISTRY		:= rcastellanosm
+AVAILABLE_PLATFORMS := linux/arm64,linux/amd64
+TAGS				:= 8.4
 
 help:
 	@echo "---------------------- Available Targets ---------------------------"
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 #------ Working Targets ----------#
-build-all: build-php-mysql build-php-pgsql build-skaffold-slim build-php-chromium build-php-tester
+build-all: build-php-static build-php-mysql build-php-pgsql build-skaffold-slim build-php-chromium build-php-tester
 build-php-tester:	## [Docker] Build and Push php image with ext for testing
 	@$(MAKE) build-and-push-php variant=tester dir=${PHP_DIR}
 build-php-chromium:	## [Docker] Build and Push php image with ext and chromium extension for testing
 	@$(MAKE) build-and-push-php variant=chromium dir=${PHP_DIR}
+build-php-static:	## [Docker] Build and Push php image with roadrunner and mysql extension
+	@$(MAKE) build-and-push-php variant=static.cli dir=${PHP_DIR}
 build-php-mysql:	## [Docker] Build and Push php image with roadrunner and mysql extension
 	@$(MAKE) build-and-push-php variant=roadrunner.mysql dir=${PHP_DIR}
 build-php-pgsql:	## [Docker] Build and Push php image with roadrunner and pgsql extension
@@ -23,7 +26,7 @@ build-skaffold-slim:	## [Docker] Build and Push skaffold image with slim variant
 build-and-push-php:
 	@$(call validate_variant)
 	@for tag in $(TAGS); do \
-		docker build --platform=linux/amd64,linux/arm64 --build-arg PHP_VERSION=$$tag -t ${DOCKER_REGISTRY}/php.$(variant):$$tag -f $(dir)/Dockerfile.$(variant) .; \
+		docker build --platform=${AVAILABLE_PLATFORMS} --build-arg PHP_VERSION=$$tag -t ${DOCKER_REGISTRY}/php.$(variant):$$tag -f $(dir)/Dockerfile.$(variant) .; \
 		echo "🎉 PHP image built successfully with tag ${DOCKER_REGISTRY}/php.$(variant):$$tag"; \
 		docker push ${DOCKER_REGISTRY}/php.$(variant):$$tag; \
 	done
