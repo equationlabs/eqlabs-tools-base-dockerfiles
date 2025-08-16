@@ -1,0 +1,20 @@
+FROM debian:12-slim AS builder
+
+WORKDIR /workspace
+
+RUN apt-get update && apt-get install -y curl
+
+RUN curl -fSL -o spc https://dl.static-php.dev/static-php-cli/spc-bin/nightly/spc-linux-$(uname -m)
+
+RUN chmod a+x spc
+
+COPY ./php/config/craft.yml .
+
+RUN ./spc craft
+
+# Production image to reduce size as maximum
+FROM alpine:3.22.1 AS production
+
+WORKDIR /workspace/
+
+COPY --from=builder /workspace/buildroot/bin/php /workspace/php
