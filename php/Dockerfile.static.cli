@@ -11,3 +11,10 @@ RUN chmod a+x spc
 COPY ./php/config/craft.yml .
 
 RUN ./spc craft
+
+# Production image to reduce size as maximum
+FROM alpine:3.22.1 AS production
+
+WORKDIR /workspace/
+
+COPY --from=builder /workspace/buildroot/bin/php /workspace/php
