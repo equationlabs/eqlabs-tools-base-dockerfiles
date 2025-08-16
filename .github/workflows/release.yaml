@@ -2,10 +2,10 @@ name: Create Release & Packages
 
 on:
     push:
-#        branches:
-#            - 'master'
-#        tags:
-#            - 'v*'
+        tags:
+            - 'v*'
+    pull_request:
+        branches: [ "main" ]
 
 permissions:
     contents: write
