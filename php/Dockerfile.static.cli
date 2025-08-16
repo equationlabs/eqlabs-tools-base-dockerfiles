@@ -1,4 +1,4 @@
-FROM debian:12-slim AS builder
+FROM --platform=${TARGETPLATFORM} debian:12-slim AS builder
 
 WORKDIR /workspace
 
@@ -13,7 +13,7 @@ COPY ./php/config/craft.yml .
 RUN ./spc craft
 
 # Production image to reduce size as maximum
-FROM alpine:3.22.1 AS production
+FROM --platform=${TARGETPLATFORM} alpine:3.22.1 AS production
 
 WORKDIR /workspace/
 
