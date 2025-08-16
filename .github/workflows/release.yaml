@@ -38,6 +38,10 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Install cosign
+              if: github.event_name != 'pull_request'
+              uses: sigstore/cosign-installer@v3
+
             - name: Set up QEMU
               id: qemu
               uses: docker/setup-qemu-action@v3
@@ -53,12 +57,27 @@ jobs:
                   images: ${{ matrix.variants.image }}
 
             - name: Build and push
+              id: build-and-push
               uses: docker/build-push-action@v6
               with:
-                  platforms: ${{ env.AVAILABLE_PLATFORMS }}
                   file: ${{ matrix.variants.dockerfile }}
-                  push: ${{ github.event_name != 'pull_request' }}
                   build-args: 'PHP_VERSION=8.4'
+                  platforms: ${{ env.AVAILABLE_PLATFORMS }}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
+                  push: ${{ github.event_name != 'pull_request' }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
 
+            # Sign the resulting Docker image digest except on PRs.
+            # This will only write to the public Rekor transparency log when the Docker repository is public to avoid leaking data.
+            # https://github.com/sigstore/cosign
+            - name: Sign the published Docker image
+              if: ${{ github.event_name != 'pull_request' }}
+              env:
+                  # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
+                  TAGS: ${{ steps.meta.outputs.tags }}
+                  DIGEST: ${{ steps.build-and-push.outputs.digest }}
+              # This step uses the identity token to provision an ephemeral certificate
+              # against the sigstore community Fulcio instance.
+              run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
