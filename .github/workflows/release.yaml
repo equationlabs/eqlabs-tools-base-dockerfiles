@@ -2,8 +2,10 @@ name: Create Release & Packages
 
 on:
     push:
+#        branches:
+#            - 'master'
 #        tags:
-#            - v*
+#            - 'v*'
 
 permissions:
     contents: write
@@ -11,18 +13,13 @@ permissions:
     id-token: write
 
 jobs:
-    goreleaser:
+    build-and-push:
         runs-on: ubuntu-latest
         env:
-            DOCKER_CLI_EXPERIMENTAL: "enabled"
+            AVAILABLE_PLATFORMS: "linux/amd64,linux/arm64"
         strategy:
             matrix:
-                php-versions:
-                    - 8.4
-                platforms:
-                    - linux/amd64
-                    - linux/arm64
-                images:
+                variants:
                     - dockerfile: ./php/Dockerfile.roadrunner.mysql
                       image: ghcr.io/equationlabs/base-docker-images/php.roadrunner.mysql
 
@@ -55,11 +52,24 @@ jobs:
               with:
                   images: ${{ matrix.images.image }}
 
-#            - name: Build and push
-#              uses: docker/build-push-action@v6
+            #- name: Build and push
+    #          uses: docker/build-push-action@v6
+    #          with:
+    #                  platforms: {{ env.AVAILABLE_PLATFORMS }}
+    #                  file: ${{ matrix.images.dockerfile }}
+    #                  push: ${{ github.event_name != 'pull_request' }}
+    #                  build-args: 'PHP_VERSION=8.4'
+    #                  tags: ${{ steps.extract-metadata.outputs.tags }}
+    #                  labels: ${{ steps.extract-metadata.outputs.labels }}
+
+#    merge:
+#        runs-on: ubuntu-latest
+#        needs:
+#            - build
+#        steps:
+#            - name: Download digests
+#              uses: actions/download-artifact@v4
 #              with:
-#                  push: ${{ github.event_name != 'pull_request' }}
-#                  platforms: ${{ matrix.platforms }}
-#                  file: ${{ matrix.images.dockerfile }}
-#                  tags: ${{ steps.extract-metadata.outputs.tags }}
-#                  labels: ${{ steps.extract-metadata.outputs.labels }}
+#                  path: ${{ runner.temp }}/digests
+#                  pattern: digests-*
+#                  merge-multiple: true
