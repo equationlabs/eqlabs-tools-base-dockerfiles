@@ -20,11 +20,13 @@ jobs:
             AVAILABLE_PLATFORMS: "linux/amd64,linux/arm64"
         strategy:
             matrix:
+                php_version:
+                    - 8.4
                 variants:
                     - dockerfile: ./php/Dockerfile.roadrunner.mysql
-                      image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.mysql
+                      image: ghcr.io/equationlabs/base-docker-images/php.roadrunner.mysql
                     - dockerfile: ./php/Dockerfile.roadrunner.pgsql
-                      image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.pgsql
+                      image: ghcr.io/equationlabs/base-docker-images/php.roadrunner.pgsql
         steps:
             - name: Checkout Source Code
               id: checkout
@@ -38,8 +40,7 @@ jobs:
               with:
                   images: ${{ matrix.variants.image }}
                   tags: |
-                    type=ref,enable=true,priority=2000,prefix=8.4,suffix=,value=8.44,event=branch
-                    type=raw,enable=true,priority=2000,value=8.44
+                    type=raw,enable=true,priority=2000,value=${{ matrix.php_version }}
 
 #            - name: Login to Docker Hub
 #              id: login
