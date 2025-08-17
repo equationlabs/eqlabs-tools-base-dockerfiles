@@ -30,7 +30,7 @@ jobs:
             - name: Prepare
               run: |
                 echo "${{ github.event_name }}"
-                echho "Sould Run: ${{ env.SHOULD_RUN }}"
+                echo "Sould Run: ${{ env.SHOULD_RUN }}"
 
             - name: Checkout Source Code
               id: checkout
