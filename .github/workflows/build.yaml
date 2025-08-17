@@ -20,10 +20,10 @@ jobs:
         strategy:
             matrix:
                 variants:
-                    - image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.mysql
-                      dockerfile: ./php/Dockerfile.roadrunner.mysql
-        #                    - image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.pgsql
-        #                      dockerfile: ./php/Dockerfile.roadrunner.pgsql
+                    - dockerfile: ./php/Dockerfile.roadrunner.mysql
+                      image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.mysql
+        #                    - dockerfile: ./php/Dockerfile.roadrunner.pgsql
+        #                      image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.pgsql
         steps:
             - name: Checkout Source Code
               id: checkout
@@ -52,34 +52,34 @@ jobs:
               uses: docker/metadata-action@v5
               with:
                   images: ${{ matrix.variants.image }}
-
-            - name: Build and push
-              id: build-and-push
-              uses: docker/build-push-action@v6
-              with:
-                  cache-from: type=gha,mode=max
-                  cache-to: type=gha,mode=max
-                  file: ${{ matrix.variants.dockerfile }}
-                  build-args: 'PHP_VERSION=8.4'
-                  platforms: ${{ env.AVAILABLE_PLATFORMS }}
-                  tags: ${{ steps.meta.outputs.tags }}
-                  labels: ${{ steps.meta.outputs.labels }}
-                  push: ${{ github.event_name != 'pull_request' }}
-
-
-            # Sign the resulting Docker image digest except on PRs.
-            # This will only write to the public Rekor transparency log when the Docker repository is public to avoid leaking data.
-            # https://github.com/sigstore/cosign
-            - name: Install cosign
-              if: github.event_name != 'pull_request'
-              uses: sigstore/cosign-installer@v3
-
-            - name: Sign the published Docker image
-              if: ${{ github.event_name != 'pull_request' }}
-              env:
-                  # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
-                  TAGS: ${{ steps.meta.outputs.tags }}
-                  DIGEST: ${{ steps.build-and-push.outputs.digest }}
-              # This step uses the identity token to provision an ephemeral certificate
-              # against the sigstore community Fulcio instance.
-              run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+#
+#            - name: Build and push
+#              id: build-and-push
+#              uses: docker/build-push-action@v6
+#              with:
+#                  cache-from: type=gha,mode=max
+#                  cache-to: type=gha,mode=max
+#                  file: ${{ matrix.variants.dockerfile }}
+#                  build-args: 'PHP_VERSION=8.4'
+#                  platforms: ${{ env.AVAILABLE_PLATFORMS }}
+#                  tags: ${{ steps.meta.outputs.tags }}
+#                  labels: ${{ steps.meta.outputs.labels }}
+#                  push: ${{ github.event_name != 'pull_request' }}
+#
+#
+#            # Sign the resulting Docker image digest except on PRs.
+#            # This will only write to the public Rekor transparency log when the Docker repository is public to avoid leaking data.
+#            # https://github.com/sigstore/cosign
+#            - name: Install cosign
+#              if: github.event_name != 'pull_request'
+#              uses: sigstore/cosign-installer@v3
+#
+#            - name: Sign the published Docker image
+#              if: ${{ github.event_name != 'pull_request' }}
+#              env:
+#                  # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
+#                  TAGS: ${{ steps.meta.outputs.tags }}
+#                  DIGEST: ${{ steps.build-and-push.outputs.digest }}
+#              # This step uses the identity token to provision an ephemeral certificate
+#              # against the sigstore community Fulcio instance.
+#              run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
