@@ -1,4 +1,4 @@
-name: Create Release & Packages
+name: Build Images
 
 on:
     push:
@@ -15,33 +15,16 @@ permissions:
 jobs:
     build-and-push:
         runs-on: ubuntu-latest
+        env:
+            AVAILABLE_PLATFORMS: "linux/amd64,linux/arm64"
         strategy:
             matrix:
-                platform:
-                    - linux/amd64
-                    - linux/arm64
                 variants:
-                    - dockerfile: ./php/Dockerfile.roadrunner.mysql
-                      image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.mysql
+                    - image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.mysql
+                      dockerfile: ./php/Dockerfile.roadrunner.mysql
         #                    - image: ghcr.io/equationlabs/base-docker-images/php84.roadrunner.pgsql
         #                      dockerfile: ./php/Dockerfile.roadrunner.pgsql
         steps:
-            - name: Prepare
-              run: |
-                  platform=${{ matrix.platform }}
-                  echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-
-            - name: Set up Docker
-              uses: docker/setup-docker-action@v4
-              with:
-                  daemon-config: |
-                    {
-                      "debug": true,
-                      "features": {
-                        "containerd-snapshotter": true
-                      }
-                    }
-
             - name: Checkout Source Code
               id: checkout
               uses: actions/checkout@v4
@@ -70,73 +53,33 @@ jobs:
               with:
                   images: ${{ matrix.variants.image }}
 
-            - name: Build and push Digest
-              id: build
+            - name: Build and push
+              id: build-and-push
               uses: docker/build-push-action@v6
               with:
                   cache-from: type=gha,mode=max
                   cache-to: type=gha,mode=max
                   file: ${{ matrix.variants.dockerfile }}
                   build-args: 'PHP_VERSION=8.4'
-                  platforms: ${{ matrix.platform }}
+                  platforms: ${{ env.AVAILABLE_PLATFORMS }}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   push: ${{ github.event_name != 'pull_request' }}
-            #                  outputs: type=image,push-by-digest=true,name-canonical=true,push=true
-
-#            - name: Export digests
-#              run: |
-#                 mkdir -p ${{ runner.temp }}/digests
-#                 digest="${{ steps.build.outputs.digest }}"
-#                 touch "${{ runner.temp }}/digests/${digest#sha256:}"
-#
-#            - name: Upload digest
-#              uses: actions/upload-artifact@v4
-#              with:
-#                  name: digests-${{ matrix.variants.image }}-${{ env.PLATFORM_PAIR }}
-#                  path: ${{ runner.temp }}/digests/*
-#                  if-no-files-found: error
-#                  retention-days: 1
 
 
-#    merge:
-#        runs-on: ubuntu-latest
-#        needs:
-#            - build
-#        steps:
-#            - name: Download digests
-#              uses: actions/download-artifact@v4
-#              with:
-#                  path: ${{ runner.temp }}/digests
-#                  pattern: digests-*
-#                  merge-multiple: true
-#
-#            - name: Login to Docker Hub
-#              uses: docker/login-action@v3
-#              with:
-#                  username: ${{ vars.DOCKERHUB_USERNAME }}
-#                  password: ${{ secrets.DOCKERHUB_TOKEN }}
-#
-#            - name: Set up Docker Buildx
-#              uses: docker/setup-buildx-action@v3
-#
-#            - name: Docker meta
-#              id: meta
-#              uses: docker/metadata-action@v5
-#              with:
-#                  images: ${{ env.REGISTRY_IMAGE }}
-#                  tags: |
-#                    type=ref,event=branch
-#                    type=ref,event=pr
-#                    type=semver,pattern={{version}}
-#                    type=semver,pattern={{major}}.{{minor}}
-#
-#            - name: Create manifest list and push
-#              working-directory: ${{ runner.temp }}/digests
-#              run: |
-#                docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-#                  $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
-#
-#            - name: Inspect image
-#              run: |
-#                docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+            # Sign the resulting Docker image digest except on PRs.
+            # This will only write to the public Rekor transparency log when the Docker repository is public to avoid leaking data.
+            # https://github.com/sigstore/cosign
+            - name: Install cosign
+              if: github.event_name != 'pull_request'
+              uses: sigstore/cosign-installer@v3
+
+            - name: Sign the published Docker image
+              if: ${{ github.event_name != 'pull_request' }}
+              env:
+                  # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
+                  TAGS: ${{ steps.meta.outputs.tags }}
+                  DIGEST: ${{ steps.build-and-push.outputs.digest }}
+              # This step uses the identity token to provision an ephemeral certificate
+              # against the sigstore community Fulcio instance.
+              run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}

@@ -1,0 +1,15 @@
+name: Create Release & Packages
+
+on:
+    push:
+        branches:
+            - main
+        tags:
+            - 'v*'
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Prepare
+              run: |
+                echo "Release Job"
