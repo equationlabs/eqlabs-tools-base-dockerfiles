@@ -4,15 +4,11 @@ on:
     workflow_run:
         workflows:
             - "Build Images"
-        branches:
-            - main
+        #        branches:
+        #            - main
         types:
             - completed
-    push:
-        branches:
-            - main
-        tags:
-            - 'v*'
+
 jobs:
     create-release-on-success:
         runs-on: ubuntu-latest
@@ -28,4 +24,4 @@ jobs:
         steps:
             - name: Prepare
               run: |
-                echo 'The triggering workflow passed'
+                echo "Release can't be create since the build images workflow finish with errors!!!"
