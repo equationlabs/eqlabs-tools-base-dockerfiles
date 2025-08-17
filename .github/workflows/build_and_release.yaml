@@ -27,6 +27,8 @@ jobs:
                       image: ghcr.io/equationlabs/base-docker-images/php.roadrunner.mysql
                     - dockerfile: ./php/Dockerfile.roadrunner.pgsql
                       image: ghcr.io/equationlabs/base-docker-images/php.roadrunner.pgsql
+                    - dockerfile: ./php/Dockerfile.static.cli
+                      image: ghcr.io/equationlabs/base-docker-images/php.static.cli
         steps:
             - name: Checkout Source Code
               id: checkout
