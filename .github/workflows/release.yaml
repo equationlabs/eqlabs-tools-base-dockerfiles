@@ -14,9 +14,17 @@ on:
         tags:
             - 'v*'
 jobs:
-    create-release:
+    create-release-on-success:
         runs-on: ubuntu-latest
         if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        steps:
+            - name: Prepare
+              run: |
+                echo 'The triggering workflow passed'
+
+    abort-release-on-failure:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
         steps:
             - name: Prepare
               run: |
