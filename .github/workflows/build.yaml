@@ -40,7 +40,7 @@ jobs:
               with:
                   images: ${{ matrix.variants.image }}
                   tags: |
-                    type=ref,enable=true,priority=600,prefix=pr-,suffix={{branch}},event=pr
+                    type=ref,enable=true,priority=1100,prefix=pr-,suffix={{branch}},event=pr
 
             - name: Login to Docker Hub
               id: login
