@@ -1,15 +1,23 @@
 name: Create Release & Packages
 
 on:
+    workflow_run:
+        workflows:
+            - "Build Images"
+        branches:
+            - main
+        types:
+            - completed
     push:
         branches:
             - main
         tags:
             - 'v*'
 jobs:
-    build-and-push:
+    create-release:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         steps:
             - name: Prepare
               run: |
-                echo "Release Job"
+                echo 'The triggering workflow passed'
