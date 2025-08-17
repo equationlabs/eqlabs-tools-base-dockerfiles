@@ -18,7 +18,6 @@ jobs:
         runs-on: ubuntu-latest
         env:
             AVAILABLE_PLATFORMS: "linux/amd64,linux/arm64"
-            SHOULD_RUN: "${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}"
         strategy:
             matrix:
                 variants:
