@@ -2,12 +2,10 @@ name: Create Release & Packages
 
 on:
     workflow_run:
-        workflows:
-            - "Build Images"
+        workflows: [ "Build Images" ]
+        types: [ completed ]
         #        branches:
         #            - main
-        types:
-            - completed
 
 jobs:
     create-release-on-success:
