@@ -62,10 +62,11 @@ jobs:
               id: build-and-push
               uses: docker/build-push-action@v6
               with:
-                  cache-from: type=gha,mode=max
-                  cache-to: type=gha,mode=max
+                  cache-from: type=gha,mode=max,ref=${{ matrix.variants.image }}
+                  cache-to: type=gha,mode=max,ref=${{ matrix.variants.image }}
                   file: ${{ matrix.variants.dockerfile }}
-                  build-args: 'PHP_VERSION=${{ matrix.php_version }}'
+                  build-args: |
+                    PHP_VERSION=${{ matrix.php_version }}
                   platforms: ${{ env.AVAILABLE_PLATFORMS }}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
