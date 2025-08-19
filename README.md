@@ -29,6 +29,9 @@ $ make buld-all
 
 - **PHP**
   - php.static.cli
+    - Basically we
+      use [static-php-cli](https://github.com/crazywhalecc/static-php-cli) + [Google Distroless](https://github.com/GoogleContainerTools/distroless)
+      images.
   - php.chromium
   - php.roadrunner.mysql
   - php.roadrunner.pgsql

@@ -4,7 +4,8 @@
 echo "Base PHP version ${PHP_VERSION}"
 
 # A single string variable with a space-separated list of binaries.
-AVAILABLE_BINARIES="php-8.4-aarch64 php-8.4-amd64"
+AVAILABLE_BINARIES="php-8.4-arm64 php-8.4-amd64"
+ARCHITECTURE_TO_BINARY_MAP = 
 
 # Get the current machine's architecture.
 CURRENT_ARCH=$(uname -m | tr '[:upper:]' '[:lower:]')
