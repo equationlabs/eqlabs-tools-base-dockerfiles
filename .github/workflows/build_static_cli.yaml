@@ -1,15 +1,15 @@
 name: Build Static PHP Cli
 
 on:
-    workflow_dispatch:
-
-permissions:
-    contents: write
-    packages: write
-    id-token: write
+    push:
+        branches:
+            - main
+            - '**'
+        tags:
+            - 'v*'
 
 jobs:
-    build-and-push:
+    build-static-cli:
         strategy:
             matrix:
                 variants:
