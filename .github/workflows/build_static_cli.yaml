@@ -1,0 +1,73 @@
+name: Build Static PHP Cli
+
+on:
+    push:
+        branches:
+            - main
+            - '**'
+        tags:
+            - 'v*'
+
+permissions:
+    contents: write
+    packages: write
+    id-token: write
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+        env:
+            AVAILABLE_PLATFORMS: "linux/amd64"
+        strategy:
+            matrix:
+                php_version:
+                    - 8.4
+                variants:
+                    - dockerfile: ./static/Dockerfile.static.cli
+                      image: ghcr.io/equationlabs/base-docker-images/php.static.cli
+        steps:
+            - name: Checkout Source Code
+              id: checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Extract metadata (tags, labels) for Docker
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ matrix.variants.image }}
+                  tags: |
+                    type=raw,enable=true,priority=2000,value=${{ matrix.php_version }}
+
+            - name: Login to Docker Hub
+              id: login
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build Static Binary Inside Docker Image
+              run: |
+                   docker buildx build -t php-static-cli:builded -f ./static/Dockerfile.static.cli .
+
+            - name: Extract the PHP binary from the image
+              run: |
+                # Create a temporary container from the built image
+                CONTAINER_ID=$(docker create php-static-cli:builded)
+
+                # Copy the file from the container to the runner's filesystem
+                docker cp ${CONTAINER_ID}:/workspace/buildroot/bin/php ./php-8.4-amd64
+
+                # Clean up the temporary container
+                docker rm ${CONTAINER_ID}
+
+            - name: Upload the binary as an artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: php-static-cli-${{ matrix.php_version }}
+                  path: ./php-8.4-amd64
+                  retention-days: 7
+
+
