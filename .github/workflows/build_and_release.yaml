@@ -15,7 +15,7 @@ permissions:
 
 jobs:
     build-and-push:
-        runs-on: ${{ matrix.variants.runner }}
+        runs-on: ubuntu-24.04
         env:
             AVAILABLE_PLATFORMS: "linux/amd64,linux/arm64"
         strategy:
