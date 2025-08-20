@@ -1,6 +1,9 @@
 FROM alpine:3.22.1 AS production
 
-ENV PHP_VERSION=${version:-8.4}
+ARG PHP_VERSION=${PHP_VERSION:-8.4}
+ENV PHP=$PHP_VERSION
+
+RUN apk update && apk add unzip
 
 WORKDIR /workspace/
 

@@ -3,7 +3,7 @@ PHP_DIR				:= ${PWD}/php
 PHP_STATIC_DIR 		:= ${PWD}/static
 SKAFFOLD_DIR 		:= ${PWD}/skaffold
 DOCKER_REGISTRY		:= rcastellanosm
-AVAILABLE_PLATFORMS := linux/amd64
+AVAILABLE_PLATFORMS := linux/amd64,linux/arm64
 TAGS				:= 8.4
 
 help:
@@ -17,7 +17,7 @@ build-php-tester:	## [Docker] Build and Push php image with ext for testing
 build-php-chromium:	## [Docker] Build and Push php image with ext and chromium extension for testing
 	@$(MAKE) build-php variant=chromium dir=${PHP_DIR}
 build-php-static:	## [Docker] Build and Push php static image
-	@$(MAKE) build-php variant=static.cli dir=${PHP_STATIC_DIR}
+	@$(MAKE) build-php variant=static.php.alpine dir=${PHP_DIR}
 build-php-mysql:	## [Docker] Build and Push php image with roadrunner and mysql extension
 	@$(MAKE) build-php variant=roadrunner.mysql dir=${PHP_DIR}
 build-php-pgsql:	## [Docker] Build and Push php image with roadrunner and pgsql extension

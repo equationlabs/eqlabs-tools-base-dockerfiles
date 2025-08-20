@@ -1,12 +1,7 @@
 name: Build Static PHP Cli
 
 on:
-    push:
-        branches:
-            - main
-            - '**'
-        tags:
-            - 'v*'
+    workflow_dispatch:
 
 jobs:
     build-static-cli:
