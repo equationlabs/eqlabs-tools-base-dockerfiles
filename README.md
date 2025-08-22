@@ -18,26 +18,23 @@ $ make build-php-chromium
 $ make buld-all
 ```
 
-### **Available types:**
-
-- php
-- skaffold
-
 ### **Available variants:**
 
-> All these images are pushed to https://hub.docker.com/r/rcastellanosm registry on Docker Hub
+> All these images are pushed to `ghcr.io/equationlabs` registry on GitHub
+
+> Tags follow the `PHP` version as image `TAG`
 
 - **PHP**
-  - php.static.cli
+  - `ghcr.io/equationlabs/php.static.cli`
     - Basically we
       use [static-php-cli](https://github.com/crazywhalecc/static-php-cli) + [Google Distroless](https://github.com/GoogleContainerTools/distroless)
       images.
-  - php.chromium
-  - php.roadrunner.mysql
-  - php.roadrunner.pgsql
+  - `ghcr.io/equationlabs/php.chromium`
+  - `ghcr.io/equationlabs/php.roadrunner.mysql`
+  - `ghcr.io/equationlabs/php.roadrunner.pgsql`
 - **Skaffold**
-  - skaffold.slim
-  - skaffold.full
+  - `ghcr.io/equationlabs/skaffold.slim`
+  - `ghcr.io/equationlabs/skaffold.full`
 
 ## Available Images
 
