@@ -79,6 +79,7 @@ jobs:
               run: |
                 echo "Saving tag ${{ github.ref_name }}"
                 echo "${{ github.ref_name }}" > tag_name.txt
+            
             - name: Upload tag name artifact
               if: startsWith(github.ref, 'refs/tags/')
               uses: actions/upload-artifact@v4
