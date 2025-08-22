@@ -9,17 +9,35 @@ on:
 jobs:
     release:
         runs-on: ubuntu-24.04
+        permissions:
+            contents: write
         if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'v') }}
         steps:
-            - name: Checkout code
+            - name: 'Download artifact'
+              uses: actions/download-artifact@v4
+              id: download-artifact
+              with:
+                  name: tag-name
+                  run-id: ${{ github.event.workflow_run.id }}
+                  path: .
+              continue-on-error: true
+
+            - if: ${{ steps.download-artifact.outcome == 'success' }}
+              name: Checkout code
               uses: actions/checkout@v4
               with:
-                fetch-depth: 0
+                  fetch-depth: 0
+
+            - name: Read tag name
+              if: ${{ steps.download-artifact.outcome == 'success' }}
+              id: tag
+              run: echo "name=$(cat tag_name.txt)" >> $GITHUB_OUTPUT
 
             - name: Create Release
+              if: ${{ steps.download-artifact.outcome == 'success' }}
               uses: softprops/action-gh-release@v2
               with:
                   generate_release_notes: true
-                  tag_name: ${{ github.event.workflow_run.head_branch }}
+                  tag_name: ${{ steps.tag.outputs.name }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
