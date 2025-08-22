@@ -42,7 +42,7 @@ jobs:
               with:
                   images: ${{ matrix.variants.image }}
                   tags: |
-                    type=raw,enable=true,priority=2000,value=${{ matrix.php_version }}
+                    type=raw,enable={{is_not_default_branch}},priority=2000,value=${{ matrix.php_version }}
 
             - name: Login to Docker Hub
               id: login
