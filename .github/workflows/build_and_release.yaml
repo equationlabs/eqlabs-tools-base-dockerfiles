@@ -24,7 +24,7 @@ jobs:
                     - 8.4
                 variants:
                     - dockerfile: ./php/Dockerfile.roadrunner.mysql
-                      image: ghcr.io/equationlaabs/php.roadrunner.mysql
+                      image: ghcr.io/equationlabs/php.roadrunner.mysql
                     - dockerfile: ./php/Dockerfile.roadrunner.pgsql
                       image: ghcr.io/equationlabs/php.roadrunner.pgsql
                     - dockerfile: ./php/Dockerfile.static.php.alpine
