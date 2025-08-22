@@ -1,7 +1,0 @@
-php-version: 8.4
-extensions: bcmath,posix,phar,zlib,openssl,curl,fileinfo,tokenizer,mbstring,pdo,pdo_mysql
-sapi:
-    - cli
-built-options:
-    with-upx-pack: true
-    prefer-pre-built: true

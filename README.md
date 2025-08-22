@@ -29,6 +29,9 @@ $ make buld-all
 
 - **PHP**
   - php.static.cli
+    - Basically we
+      use [static-php-cli](https://github.com/crazywhalecc/static-php-cli) + [Google Distroless](https://github.com/GoogleContainerTools/distroless)
+      images.
   - php.chromium
   - php.roadrunner.mysql
   - php.roadrunner.pgsql
@@ -39,7 +42,7 @@ $ make buld-all
 ## Available Images
 
 - PHP
-  - [PHP Static CLI Binary](php/Dockerfile.static.cli) - Useful to use on distroless distributions
+  - [PHP Static CLI Binary](php/Dockerfile.static.php.alpine) - Useful to use on distroless distributions
   - [PHP + Chromium extension](php/Dockerfile.chromium) - Useful for E2E Testing
   - [PHP + RoadRunner + MySQL extension](php/Dockerfile.roadrunner.mysql)
   - [PHP + RoadRunner + PostgreSQL extension](php/Dockerfile.roadrunner.pgsql)

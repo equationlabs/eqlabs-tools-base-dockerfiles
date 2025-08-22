@@ -1,0 +1,14 @@
+FROM alpine:3.22.1 AS production
+
+ARG PHP_VERSION=${PHP_VERSION:-8.4}
+ENV PHP=$PHP_VERSION
+
+RUN apk update && apk add unzip
+
+WORKDIR /workspace/
+
+ADD ./php/builds /workspace/builds
+
+RUN mv builds/choose_binary.sh . 
+
+RUN ./choose_binary.sh
