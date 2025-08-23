@@ -84,6 +84,6 @@ jobs:
               if: startsWith(github.ref, 'refs/tags/')
               uses: actions/upload-artifact@v4
               with:
-                overwrite: 'true'
                 name: tag-name
                 path: tag_name.txt
+                overwrite: true
