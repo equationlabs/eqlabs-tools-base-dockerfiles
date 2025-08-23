@@ -18,8 +18,9 @@ jobs:
               id: download-artifact
               with:
                   name: tag-name
-                  run-id: ${{ github.event.workflow_run.id }}
                   path: .
+                  run-id: ${{ github.event.workflow_run.id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
               continue-on-error: true
 
             - if: ${{ steps.download-artifact.outcome == 'success' }}
