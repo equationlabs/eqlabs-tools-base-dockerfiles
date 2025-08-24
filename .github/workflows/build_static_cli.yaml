@@ -1,4 +1,4 @@
-name: Build Static PHP Cli
+name: Build Static PHP CLI
 
 on:
     workflow_dispatch:
@@ -39,7 +39,7 @@ jobs:
               with:
                 name: php-static-cli-${{ matrix.variants.version }}-${{ matrix.variants.architecture }}
                 path: |
-                  ./php-${{ matrix.variants.version }}-${{ matrix.variants.architecture }}
+                  buildroot/bin/php
 
 
 
