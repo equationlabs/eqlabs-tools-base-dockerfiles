@@ -2,21 +2,19 @@
 
 # This script is designed to be compatible with POSIX-compliant shells like Ash (used in Alpine).
 
-# A single string variable with a space-separated list of supported architectures.
-SUPPORTED_ARCHITECTURES="x86_64 aarch64"
-
 # Get the current machine's architecture.
 CURRENT_ARCH=$(uname -m)
+PHP_VERSION_CLEAN=$(echo "$PHP" | tr -d '.')
 
-# Standardize architecture names to a format we can match.
+# Standardize architecture names to a format we can match.PO
 case "$CURRENT_ARCH" in
 x86_64) 
     CURRENT_ARCH="x86_64"
-    CORRECT_BINARY="php-static-cli-${PHP}-amd64.zip"
+    CORRECT_BINARY="php-static-cli-${PHP_VERSION_CLEAN}-amd64"
     ;; 
 aarch64) 
     CURRENT_ARCH="aarch64"
-    CORRECT_BINARY="php-static-cli-${PHP}-arm64.zip"
+    CORRECT_BINARY="php-static-cli-${PHP_VERSION_CLEAN}-arm64"
     ;; 
 *) 
     echo "Error: Unsupported architecture '${CURRENT_ARCH}'." >&2
@@ -28,9 +26,6 @@ echo "Detected architecture: ${CURRENT_ARCH}"
 
 # Create the destination directory if it doesn't exist
 mkdir -p /workspace/bin
-
-echo "Unzipping package and copying binary..."
-unzip "/workspace/builds/${CORRECT_BINARY}" -d "/tmp/unzipped"
 
 # The original script attempts to copy from /workspace/builds. Assuming the unzipped binary is already there.
 cp "/workspace/builds/${CORRECT_BINARY}" "/workspace/bin/php"
