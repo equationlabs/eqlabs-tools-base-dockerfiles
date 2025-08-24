@@ -29,10 +29,10 @@ jobs:
                 ref: 2.7.1
 
             - name: 'Download and prepare the PHP source'
-              run: ./bin/spc-gnu-docker download --with-php=${{ matrix.variants.version }} --for-extensions=${{ env.EXTENSIONS }}
+              run: ./bin/spc-gnu-docker download --with-php=${{ matrix.variants.version }} --for-extensions=${{ env.EXTENSIONS }} --prefer-pre-built
 
             - name: 'Build the static PHP binary'
-              run: ./bin/spc-gnu-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli
+              run: ./bin/spc-gnu-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli --with-upx-pack
 
             - name: 'Upload the binary as an artifact'
               uses: actions/upload-artifact@v4
