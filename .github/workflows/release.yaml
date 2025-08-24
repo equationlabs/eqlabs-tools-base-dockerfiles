@@ -6,41 +6,42 @@ on:
         types:
             - completed
 
+permissions:
+  contents: write
+
 jobs:
     release:
         runs-on: ubuntu-24.04
-        permissions:
-            contents: write
         if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'v') }}
         steps:
-            - name: 'Download artifact'
+            - name: 'Download Artifact From Previous Workflow'
               uses: actions/download-artifact@v5
               id: download-artifact
               with:
                   name: tag-name
-                  path: .
                   run-id: ${{ github.event.workflow_run.id }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
               continue-on-error: false
 
-            - name: 'Check artifact download outcome'
+            - if: ${{ steps.download-artifact.outcome == 'success' }}
+              name: 'Check Artifact Download Outcome'
               run: |
                 echo "Artifact download outcome: ${{ steps.download-artifact.outcome }}"
                 ls -R
 
             - if: ${{ steps.download-artifact.outcome == 'success' }}
-              name: Checkout code
+              name: 'Checkout Source Code'
               uses: actions/checkout@v4
               with:
                   fetch-depth: 0
 
-            - name: Read tag name
-              if: ${{ steps.download-artifact.outcome == 'success' }}
+            - if: ${{ steps.download-artifact.outcome == 'success' }}
+              name: 'Read TAG name'
               id: tag
               run: echo "name=$(cat tag_name.txt)" >> $GITHUB_OUTPUT
 
-            - name: Create Release
-              if: ${{ steps.download-artifact.outcome == 'success' }}
+            - if: ${{ steps.download-artifact.outcome == 'success' }}
+              name: 'Create Release'
               uses: softprops/action-gh-release@v2
               with:
                   name: ${{ steps.tag.outputs.name }}
