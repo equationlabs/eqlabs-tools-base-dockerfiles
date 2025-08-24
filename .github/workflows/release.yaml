@@ -23,6 +23,11 @@ jobs:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
               continue-on-error: false
 
+            - name: 'Check artifact download outcome'
+              run: |
+                echo "Artifact download outcome: ${{ steps.download-artifact.outcome }}"
+                ls -R
+
             - if: ${{ steps.download-artifact.outcome == 'success' }}
               name: Checkout code
               uses: actions/checkout@v4
