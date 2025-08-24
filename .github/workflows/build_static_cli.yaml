@@ -32,7 +32,7 @@ jobs:
               run: ./bin/spc-gnu-docker download --with-php=${{ matrix.variants.version }} --for-extensions=${{ env.EXTENSIONS }} --prefer-pre-built
 
             - name: 'Install UPX'
-              run: ./bin/spc install-pkg upx
+              run: ./bin/spc-gnu-docker install-pkg upx
 
             - name: 'Build the static PHP binary'
               run: ./bin/spc-gnu-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli --with-upx-pack
