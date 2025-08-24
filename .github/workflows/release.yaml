@@ -14,6 +14,12 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'v') }}
         steps:
+            - if: ${{ steps.download-artifact.outcome == 'success' }}
+              name: 'Checkout Source Code'
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+
             - name: 'Download Artifact From Previous Workflow'
               uses: actions/download-artifact@v5
               id: download-artifact
@@ -22,18 +28,6 @@ jobs:
                   run-id: ${{ github.event.workflow_run.id }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
               continue-on-error: false
-
-            - if: ${{ steps.download-artifact.outcome == 'success' }}
-              name: 'Check Artifact Download Outcome'
-              run: |
-                echo "Artifact download outcome: ${{ steps.download-artifact.outcome }}"
-                ls -R
-
-            - if: ${{ steps.download-artifact.outcome == 'success' }}
-              name: 'Checkout Source Code'
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
 
             - if: ${{ steps.download-artifact.outcome == 'success' }}
               name: 'Read TAG name'
