@@ -2,9 +2,8 @@ name: Build and Push Images
 
 on:
     push:
-        branches:
-            - main
-            - '**'
+        branches-ignore:
+          - main
         tags:
             - 'v*'
 
