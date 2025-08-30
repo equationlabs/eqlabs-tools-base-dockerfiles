@@ -24,11 +24,11 @@ jobs:
                     - 8.4
                 variants:
                     - dockerfile: ./php/Dockerfile.roadrunner.mysql
-                      image: ghcr.io/equationlabs/php.roadrunner.mysql
+                      image: ghcr.io/racastellanosm/php.roadrunner.mysql
                     - dockerfile: ./php/Dockerfile.roadrunner.pgsql
-                      image: ghcr.io/equationlabs/php.roadrunner.pgsql
+                      image: ghcr.io/racastellanosm/php.roadrunner.pgsql
                     - dockerfile: ./php/Dockerfile.static.php.alpine
-                      image: ghcr.io/equationlabs/php.static.cli
+                      image: ghcr.io/racastellanosm/php.static.cli
         steps:
             - name: 'Checkout Source Code'
               id: checkout
