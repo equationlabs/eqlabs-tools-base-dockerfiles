@@ -13,7 +13,7 @@ permissions:
     id-token: write
 
 jobs:
-    build-and-push:
+    build-and-push-php:
         runs-on: ubuntu-latest
         env:
             AVAILABLE_PLATFORMS: "linux/amd64,linux/arm64"
@@ -87,3 +87,56 @@ jobs:
                 name: tag-name
                 path: tag_name.txt
                 overwrite: true
+
+    build-and-push-others:
+        runs-on: ubuntu-latest
+        env:
+            AVAILABLE_PLATFORMS: "linux/amd64,linux/arm64"
+            DOCKER_BUILD_SUMMARY: false
+        strategy:
+            matrix:
+                variants:
+                    - dockerfile: ./skaffold/Dockerfile.slim
+                      image: ghcr.io/racastellanosm/skaffold.slim
+        steps:
+          - name: 'Checkout Source Code'
+            id: checkout
+            uses: actions/checkout@v4
+            with:
+              fetch-depth: 0
+
+          - name: 'Extract metadata (tags, labels) for Docker'
+            id: meta
+            uses: docker/metadata-action@v5
+            with:
+              images: ${{ matrix.variants.image }}
+
+          - name: 'Login to Docker Hub'
+            id: login
+            uses: docker/login-action@v3
+            with:
+              registry: ghcr.io
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: 'Set up QEMU'
+            id: qemu
+            uses: docker/setup-qemu-action@v3
+
+          - name: 'Set up Docker Buildx'
+            id: buildx
+            uses: docker/setup-buildx-action@v3
+
+          - name: 'Build and Push'
+            id: build-and-push
+            uses: docker/build-push-action@v6
+            with:
+              cache-from: type=gha,mode=max,scope=${{ matrix.variants.image }}
+              cache-to: type=gha,mode=max,scope=${{ matrix.variants.image }}
+              file: ${{ matrix.variants.dockerfile }}
+              build-args: |
+                PHP_VERSION=${{ matrix.php_version }}
+              platforms: ${{ env.AVAILABLE_PLATFORMS }}
+              tags: ${{ steps.meta.outputs.tags }}
+              labels: ${{ steps.meta.outputs.labels }}
+              push: ${{ startsWith(github.ref, 'refs/tags/') }}
