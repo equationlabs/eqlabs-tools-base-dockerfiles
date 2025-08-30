@@ -20,21 +20,21 @@ $ make buld-all
 
 ### **Available variants:**
 
-> All these images are pushed to `ghcr.io/equationlabs` registry on GitHub
+> All these images are pushed to `ghcr.io/racastellanosm` registry on GitHub
 
 > Tags follow the `PHP` version as image `TAG`
 
 - **PHP**
-  - `ghcr.io/equationlabs/php.static.cli`
+  - `ghcr.io/racastellanosm/php.static.cli`
     - Basically we
       use [static-php-cli](https://github.com/crazywhalecc/static-php-cli) + [Google Distroless](https://github.com/GoogleContainerTools/distroless)
       images.
-  - `ghcr.io/equationlabs/php.chromium`
-  - `ghcr.io/equationlabs/php.roadrunner.mysql`
-  - `ghcr.io/equationlabs/php.roadrunner.pgsql`
+  - `ghcr.io/racastellanosm/php.chromium`
+  - `ghcr.io/racastellanosm/php.roadrunner.mysql`
+  - `ghcr.io/racastellanosm/php.roadrunner.pgsql`
 - **Skaffold**
-  - `ghcr.io/equationlabs/skaffold.slim`
-  - `ghcr.io/equationlabs/skaffold.full`
+  - `ghcr.io/racastellanosm/skaffold.slim`
+  - `ghcr.io/racastellanosm/skaffold.full`
 
 ## Available Images
 
