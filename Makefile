@@ -2,7 +2,7 @@ SHELL 				:= /bin/bash
 PHP_DIR				:= ${PWD}/php
 PHP_STATIC_DIR 		:= ${PWD}/static
 SKAFFOLD_DIR 		:= ${PWD}/skaffold
-DOCKER_REGISTRY		:= rcastellanosm
+DOCKER_REGISTRY		:= ghcr.io/racastellanosm
 AVAILABLE_PLATFORMS := linux/amd64,linux/arm64
 TAGS				:= 8.4
 
@@ -23,7 +23,9 @@ build-php-mysql:	## [Docker] Build and Push php image with roadrunner and mysql 
 build-php-pgsql:	## [Docker] Build and Push php image with roadrunner and pgsql extension
 	@$(MAKE) build-php variant=roadrunner.pgsql dir=${PHP_DIR}
 build-skaffold-slim:	## [Docker] Build and Push skaffold image with slim variant for CI/CD pipelines
-	@$(MAKE) build-others type=skaffold variant=slim dir=${SKAFFOLD_DIR}
+	@$(MAKE) build-others type=skaffold variant=slim version=latest dir=skaffold
+build-postgres-postgis:	## [Docker] Build and Push postgres image with postgis extension for local development
+	@$(MAKE) build-others type=postgres variant=postgis version=17-3.5 dir=postgres
 build-php:
 	@$(call validate_variant)
 	@for tag in $(TAGS); do \
@@ -34,8 +36,8 @@ build-php:
 build-others:
 	@$(call validate_type)
 	@$(call validate_variant)
-	@docker build -t ${DOCKER_REGISTRY}/$(type).$(variant):latest -f $(dir)/Dockerfile.$(variant) .
-	@echo "🎉 $(type) image built successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):latest"
+	@docker build -t ${DOCKER_REGISTRY}/$(type).$(variant):$(version) -f $(dir)/Dockerfile.$(variant) $(dir)
+	@echo "🎉 $(type) image built successfully with tag ${DOCKER_REGISTRY}/$(type).$(variant):$(version)"
 
 #------ Helper Targets ----------#
 define validate_type

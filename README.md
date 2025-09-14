@@ -35,6 +35,9 @@ $ make buld-all
 - **Skaffold**
   - `ghcr.io/racastellanosm/skaffold.slim`
   - `ghcr.io/racastellanosm/skaffold.full`
+- **Postgres**
+  - `ghcr.io/racastellanosm/postgres.postgis`
+    - Based on the official Postgres image with PostGIS extension
 
 ## Available Images
 
@@ -45,3 +48,5 @@ $ make buld-all
   - [PHP + RoadRunner + PostgreSQL extension](php/Dockerfile.roadrunner.pgsql)
 - Skaffold
   - [Skaffold + Kubectl + Kustomize for CI/CD Pipelines](skaffold/Dockerfile.slim)
+- Postgres
+  - [Postgres + PostGIS extension](postgres/Dockerfile.postgis)
