@@ -99,9 +99,11 @@ jobs:
                     - dockerfile: ./skaffold/Dockerfile.slim
                       image: ghcr.io/racastellanosm/skaffold.slim
                       tags: latest
+                      context: skaffold
                     - dockerfile: ./postgres/Dockerfile.postgis
                       image: ghcr.io/racastellanosm/postgres.postgis
                       tags: 17-3.5
+                      context: postgres
         steps:
           - name: 'Checkout Source Code'
             id: checkout
@@ -138,6 +140,7 @@ jobs:
               cache-from: type=gha,mode=max,scope=${{ matrix.variants.image }}
               cache-to: type=gha,mode=max,scope=${{ matrix.variants.image }}
               file: ${{ matrix.variants.dockerfile }}
+              context: ${{ matrix.variants.context }}
               build-args: |
                 PHP_VERSION=${{ matrix.php_version }}
               platforms: ${{ env.AVAILABLE_PLATFORMS }}
