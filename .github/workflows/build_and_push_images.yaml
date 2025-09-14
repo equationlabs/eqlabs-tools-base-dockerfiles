@@ -99,7 +99,7 @@ jobs:
                     - dockerfile: ./skaffold/Dockerfile.slim
                       image: ghcr.io/racastellanosm/skaffold.slim
                       tags: latest
-                    - dockerfile: ./postgis/Dockerfile.postgis
+                    - dockerfile: ./postgres/Dockerfile.postgis
                       image: ghcr.io/racastellanosm/postgres.postgis
                       tags: 17-3.5
         steps:
