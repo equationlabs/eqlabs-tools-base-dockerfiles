@@ -27,6 +27,8 @@ jobs:
                       image: ghcr.io/racastellanosm/php.roadrunner.mysql
                     - dockerfile: ./php/Dockerfile.roadrunner.pgsql
                       image: ghcr.io/racastellanosm/php.roadrunner.pgsql
+                    - dockerfile: ./php/Dockerfile.all.extensions
+                      image: ghcr.io/racastellanosm/php.all.extensions
                     - dockerfile: ./php/Dockerfile.static.php.alpine
                       image: ghcr.io/racastellanosm/php.static.cli
         steps:
